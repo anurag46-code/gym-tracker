@@ -142,24 +142,25 @@ function App() {
 
   return (
     <div className="container">
-      <header style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <h1 style={{ color: 'white', fontSize: '3em', marginBottom: '10px' }}>💪 Gym Tracker</h1>
-        <p style={{ color: 'white', fontSize: '1.2em' }}>Level up your fitness journey!</p>
+      <header className="header">
+        <h1>💪 Gym Tracker</h1>
+        <p>Level up your fitness journey!</p>
       </header>
 
-      <nav style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '30px', flexWrap: 'wrap' }}>
-        {['dashboard', 'tracker', 'achievements', 'profile'].map(view => (
+      <nav className="nav-tabs">
+        {[
+          { id: 'dashboard', label: 'Dashboard', emoji: '📊' },
+          { id: 'tracker', label: 'Log Workout', emoji: '📝' },
+          { id: 'achievements', label: 'Achievements', emoji: '🏆' },
+          { id: 'profile', label: 'Profile', emoji: '👤' }
+        ].map(({ id, label, emoji }) => (
           <button
-            key={view}
-            className="btn"
-            style={{ 
-              background: currentView === view ? '#ff6b6b' : 'rgba(255,255,255,0.2)',
-              fontSize: '14px',
-              padding: '10px 20px'
-            }}
-            onClick={() => setCurrentView(view)}
+            key={id}
+            className={`nav-tab ${currentView === id ? 'active' : ''}`}
+            onClick={() => setCurrentView(id)}
           >
-            {view.charAt(0).toUpperCase() + view.slice(1)}
+            <span>{emoji}</span>
+            {label}
           </button>
         ))}
       </nav>
@@ -168,8 +169,9 @@ function App() {
 
       <DailyMotivation quote={getDailyMotivation()} />
       
-      <div style={{ textAlign: 'center', marginTop: '30px', fontSize: '0.8em', color: 'rgba(255,255,255,0.6)' }}>
+      <div className="text-center mt-4" style={{ fontSize: '0.8em', color: 'rgba(255,255,255,0.6)' }}>
         <button 
+          className="btn"
           onClick={() => {
             if (confirm('Are you sure you want to reset all data? This cannot be undone!')) {
               localStorage.removeItem('gym-tracker-userData')
@@ -180,11 +182,9 @@ function App() {
           }}
           style={{ 
             background: 'rgba(255,255,255,0.1)', 
-            color: 'rgba(255,255,255,0.7)', 
-            border: 'none', 
-            padding: '5px 10px', 
-            borderRadius: '5px',
-            cursor: 'pointer'
+            color: 'rgba(255,255,255,0.9)', 
+            fontSize: '14px',
+            padding: '8px 16px'
           }}
         >
           🔄 Reset Data

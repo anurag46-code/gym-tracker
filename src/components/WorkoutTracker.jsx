@@ -64,144 +64,139 @@ const WorkoutTracker = ({ onAddWorkout }) => {
 
   return (
     <div className="card">
-      <h2>📝 Log Your Workout</h2>
+      <h2 style={{ marginBottom: '24px' }}>📝 Log Your Workout</h2>
       
-      <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: '600' }}>Workout Type:</label>
-          <select 
-            value={workout.type} 
-            onChange={(e) => setWorkout(prev => ({ ...prev, type: e.target.value }))}
-            style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd' }}
-            required
-          >
-            <option value="">Select workout type</option>
-            {workoutTypes.map(type => (
-              <option key={type} value={type}>{type}</option>
-            ))}
-          </select>
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-2">
+          <div className="form-group">
+            <label className="form-label">Workout Type</label>
+            <select 
+              value={workout.type} 
+              onChange={(e) => setWorkout(prev => ({ ...prev, type: e.target.value }))}
+              className="form-input"
+              required
+            >
+              <option value="">Select workout type</option>
+              {workoutTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Duration (minutes)</label>
+            <input 
+              type="number" 
+              value={workout.duration} 
+              onChange={(e) => setWorkout(prev => ({ ...prev, duration: e.target.value }))}
+              className="form-input"
+              placeholder="e.g., 60"
+              required
+            />
+          </div>
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: '600' }}>Duration (minutes):</label>
-          <input 
-            type="number" 
-            value={workout.duration} 
-            onChange={(e) => setWorkout(prev => ({ ...prev, duration: e.target.value }))}
-            style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd' }}
-            placeholder="e.g., 60"
-            required
-          />
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-            <h3>Exercises:</h3>
-            <button type="button" className="btn" onClick={addExercise} style={{ fontSize: '14px', padding: '8px 16px' }}>
-              + Add Exercise
+        <div className="form-group">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h3 style={{ margin: 0 }}>Exercises</h3>
+            <button type="button" className="btn" onClick={addExercise}>
+              ➕ Add Exercise
             </button>
           </div>
           
-          {workout.exercises.map((exercise, index) => (
-            <div key={index} style={{ 
-              border: '1px solid #eee', 
-              padding: '15px', 
-              borderRadius: '8px', 
-              marginBottom: '15px',
-              background: '#f9f9f9'
-            }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr auto', gap: '10px', alignItems: 'end' }}>
-                <div>
-                  <label style={{ fontSize: '12px', display: 'block', marginBottom: '5px' }}>Exercise</label>
-                  <input 
-                    type="text" 
-                    value={exercise.name} 
-                    onChange={(e) => updateExercise(index, 'name', e.target.value)}
-                    placeholder="e.g., Bench Press"
-                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-                    required
-                  />
+          <div className="grid" style={{ gap: '16px' }}>
+            {workout.exercises.map((exercise, index) => (
+              <div key={index} className="card" style={{ padding: '20px', margin: 0 }}>
+                <div className="grid grid-4" style={{ gap: '12px', alignItems: 'end' }}>
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Exercise</label>
+                    <input 
+                      type="text" 
+                      value={exercise.name} 
+                      onChange={(e) => updateExercise(index, 'name', e.target.value)}
+                      className="form-input"
+                      placeholder="e.g., Bench Press"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Sets</label>
+                    <input 
+                      type="number" 
+                      value={exercise.sets} 
+                      onChange={(e) => updateExercise(index, 'sets', e.target.value)}
+                      className="form-input"
+                      placeholder="3"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Reps</label>
+                    <input 
+                      type="number" 
+                      value={exercise.reps} 
+                      onChange={(e) => updateExercise(index, 'reps', e.target.value)}
+                      className="form-input"
+                      placeholder="10"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Weight (kg)</label>
+                    <input 
+                      type="number" 
+                      value={exercise.weight} 
+                      onChange={(e) => updateExercise(index, 'weight', e.target.value)}
+                      className="form-input"
+                      placeholder="50"
+                      required
+                    />
+                  </div>
+                  
+                  <button 
+                    type="button" 
+                    onClick={() => removeExercise(index)}
+                    className="btn"
+                    style={{ 
+                      background: '#ff6b6b',
+                      minHeight: '44px',
+                      padding: '8px'
+                    }}
+                    disabled={workout.exercises.length <= 1}
+                  >
+                    ✕
+                  </button>
                 </div>
-                
-                <div>
-                  <label style={{ fontSize: '12px', display: 'block', marginBottom: '5px' }}>Sets</label>
-                  <input 
-                    type="number" 
-                    value={exercise.sets} 
-                    onChange={(e) => updateExercise(index, 'sets', e.target.value)}
-                    placeholder="3"
-                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label style={{ fontSize: '12px', display: 'block', marginBottom: '5px' }}>Reps</label>
-                  <input 
-                    type="number" 
-                    value={exercise.reps} 
-                    onChange={(e) => updateExercise(index, 'reps', e.target.value)}
-                    placeholder="10"
-                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label style={{ fontSize: '12px', display: 'block', marginBottom: '5px' }}>Weight (kg)</label>
-                  <input 
-                    type="number" 
-                    value={exercise.weight} 
-                    onChange={(e) => updateExercise(index, 'weight', e.target.value)}
-                    placeholder="50"
-                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-                    required
-                  />
-                </div>
-                
-                <button 
-                  type="button" 
-                  onClick={() => removeExercise(index)}
-                  style={{ 
-                    background: '#ff6b6b', 
-                    color: 'white', 
-                    border: 'none', 
-                    borderRadius: '4px', 
-                    padding: '8px',
-                    cursor: 'pointer'
-                  }}
-                  disabled={workout.exercises.length <= 1}
-                >
-                  ✕
-                </button>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: '600' }}>Notes:</label>
+        <div className="form-group">
+          <label className="form-label">Notes</label>
           <textarea 
             value={workout.notes} 
             onChange={(e) => setWorkout(prev => ({ ...prev, notes: e.target.value }))}
-            style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd', minHeight: '80px' }}
+            className="form-input"
+            style={{ minHeight: '100px', resize: 'vertical' }}
             placeholder="How did you feel? Any PRs?"
           />
         </div>
 
         {workout.exercises.length > 0 && (
-          <div style={{ 
-            background: '#e8f5e8', 
-            padding: '15px', 
-            borderRadius: '8px', 
-            marginBottom: '20px',
-            textAlign: 'center'
+          <div className="card" style={{ 
+            background: 'linear-gradient(45deg, #e8f5e8, #d4edda)',
+            textAlign: 'center',
+            marginBottom: '24px'
           }}>
-            <strong>Estimated Total Weight: {calculateTotalWeight()}kg</strong>
+            <strong style={{ fontSize: '1.1em' }}>Estimated Total Weight: {calculateTotalWeight()}kg</strong>
           </div>
         )}
 
-        <button type="submit" className="btn" style={{ width: '100%', fontSize: '18px' }}>
+        <button type="submit" className="btn" style={{ width: '100%', fontSize: '18px', minHeight: '52px' }}>
           🎯 Complete Workout
         </button>
       </form>

@@ -14,57 +14,38 @@ const Achievements = ({ achievements }) => {
 
   return (
     <div>
-      <div className="card" style={{ textAlign: 'center' }}>
-        <h2>🏆 Achievements</h2>
-        <p style={{ fontSize: '1.1em', marginBottom: '20px' }}>
+      <div className="card text-center">
+        <h2 style={{ marginBottom: '16px' }}>🏆 Achievements</h2>
+        <p style={{ fontSize: '1.1em', color: 'var(--text-secondary)', marginBottom: '32px' }}>
           Unlocked: {achievements.length} / {allAchievements.length}
         </p>
         
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-          gap: '20px',
-          marginTop: '20px'
-        }}>
+        <div className="grid grid-2">
           {allAchievements.map(achievement => (
             <div 
               key={achievement.id}
-              className="card" 
-              style={{ 
-                background: achievement.locked ? '#f0f0f0' : 'linear-gradient(45deg, #667eea, #764ba2)',
-                color: achievement.locked ? '#666' : 'white',
-                opacity: achievement.locked ? 0.7 : 1,
-                position: 'relative'
-              }}
+              className={`achievement-card ${achievement.locked ? 'locked' : ''}`}
             >
               {achievement.locked && (
                 <div style={{ 
                   position: 'absolute', 
-                  top: '10px', 
-                  right: '10px', 
+                  top: '16px', 
+                  right: '16px', 
                   fontSize: '1.5em',
-                  opacity: 0.3
+                  opacity: 0.5
                 }}>
                   🔒
                 </div>
               )}
               
-              <div style={{ fontSize: '3em', marginBottom: '10px' }}>
-                {achievement.badge}
-              </div>
+              <div className="emoji">{achievement.badge}</div>
               
-              <h3 style={{ marginBottom: '10px' }}>{achievement.name}</h3>
-              <p style={{ fontSize: '0.9em', opacity: 0.9 }}>{achievement.description}</p>
+              <h3>{achievement.name}</h3>
+              <p>{achievement.description}</p>
               
               {!achievement.locked && (
-                <div style={{ 
-                  marginTop: '15px', 
-                  padding: '5px 10px', 
-                  background: 'rgba(255,255,255,0.2)', 
-                  borderRadius: '10px',
-                  fontSize: '0.8em'
-                }}>
-                  Unlocked! 🎉
+                <div className="badge" style={{ marginTop: '16px' }}>
+                  🎉 Unlocked
                 </div>
               )}
             </div>
@@ -73,11 +54,11 @@ const Achievements = ({ achievements }) => {
       </div>
 
       {achievements.length > 0 && (
-        <div className="card" style={{ background: 'linear-gradient(45deg, #ffd93d, #ff6b6b)', color: 'white' }}>
-          <h3>🎯 Your Progress</h3>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '15px' }}>
+        <div className="card" style={{ background: 'var(--secondary-gradient)', color: 'white' }}>
+          <h3 style={{ marginBottom: '20px' }}>🎯 Your Progress</h3>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
             {achievements.map(achievement => (
-              <span key={achievement.id} className="badge" style={{ background: 'white', color: '#333' }}>
+              <span key={achievement.id} className="badge" style={{ background: 'rgba(255,255,255,0.2)' }}>
                 {achievement.badge} {achievement.name}
               </span>
             ))}
