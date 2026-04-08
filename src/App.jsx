@@ -19,23 +19,46 @@ const motivationQuotes = [
 ]
 
 function App() {
+  // Load data from localStorage on initial render
+  const loadFromStorage = (key, defaultValue) => {
+    try {
+      const item = localStorage.getItem(`gym-tracker-${key}`)
+      return item ? JSON.parse(item) : defaultValue
+    } catch {
+      return defaultValue
+    }
+  }
+
   const [currentView, setCurrentView] = useState('dashboard')
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState(() => loadFromStorage('userData', {
     name: 'XD',
     level: 1,
     xp: 0,
     streak: 0,
     workoutsCompleted: 0,
     totalWeightLifted: 0
-  })
-  const [workouts, setWorkouts] = useState([])
-  const [achievements, setAchievements] = useState([])
+  }))
+  const [workouts, setWorkouts] = useState(() => loadFromStorage('workouts', []))
+  const [achievements, setAchievements] = useState(() => loadFromStorage('achievements', []))
 
   const getDailyMotivation = () => {
     const today = new Date().toDateString()
     const dayIndex = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0) % motivationQuotes.length
     return motivationQuotes[dayIndex]
   }
+
+  // Save data to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('gym-tracker-userData', JSON.stringify(userData))
+  }, [userData])
+
+  useEffect(() => {
+    localStorage.setItem('gym-tracker-workouts', JSON.stringify(workouts))
+  }, [workouts])
+
+  useEffect(() => {
+    localStorage.setItem('gym-tracker-achievements', JSON.stringify(achievements))
+  }, [achievements])
 
   const addWorkout = (workout) => {
     const newWorkouts = [...workouts, {
@@ -90,6 +113,18 @@ function App() {
     }
   }, [userData.xp])
 
+  // Reset streak if user hasn't worked out today
+  useEffect(() => {
+    const today = new Date().toDateString()
+    const lastWorkoutDate = workouts.length > 0 
+      ? new Date(workouts[workouts.length - 1].date).toDateString()
+      : null
+    
+    if (lastWorkoutDate !== today && userData.streak > 0) {
+      setUserData(prev => ({ ...prev, streak: 0 }))
+    }
+  }, [workouts, userData.streak])
+
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
@@ -132,6 +167,29 @@ function App() {
       {renderView()}
 
       <DailyMotivation quote={getDailyMotivation()} />
+      
+      <div style={{ textAlign: 'center', marginTop: '30px', fontSize: '0.8em', color: 'rgba(255,255,255,0.6)' }}>
+        <button 
+          onClick={() => {
+            if (confirm('Are you sure you want to reset all data? This cannot be undone!')) {
+              localStorage.removeItem('gym-tracker-userData')
+              localStorage.removeItem('gym-tracker-workouts')
+              localStorage.removeItem('gym-tracker-achievements')
+              window.location.reload()
+            }
+          }}
+          style={{ 
+            background: 'rgba(255,255,255,0.1)', 
+            color: 'rgba(255,255,255,0.7)', 
+            border: 'none', 
+            padding: '5px 10px', 
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          🔄 Reset Data
+        </button>
+      </div>
     </div>
   )
 }
